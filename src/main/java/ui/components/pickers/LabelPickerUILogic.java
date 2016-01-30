@@ -58,6 +58,10 @@ public class LabelPickerUILogic {
         if (dialog != null) dialog.populatePanes(getExistingLabels(), getAddedLabels(), matchingLabels, labelGroups);
     }
 
+    /**
+     * This method is called when the user manually clicks on the label
+     * @param name
+     */
     public void toggleLabel(String name) {
         removePossibleLabel();
         updateLabel(name);
@@ -65,6 +69,9 @@ public class LabelPickerUILogic {
         populatePanes();
     }
 
+    /**
+     * This method should be called internally when the user presses space in the text field
+     */
     public void toggleHighlightedLabel() {
         if (!matchingLabels.isEmpty() && hasHighlightedLabel()) {
             toggleLabel(
@@ -72,6 +79,11 @@ public class LabelPickerUILogic {
         }
     }
 
+    /**
+     * This method should be called by the UI's text field upon any change
+     *
+     * @param text
+     */
     public void processTextFieldChange(String text) {
         if (hasTextElement(text) && hasNewQuery(text)) {
             registerQuery(getQuery(text));
@@ -368,6 +380,10 @@ public class LabelPickerUILogic {
         if (!match.isEmpty()) highlightFirstMatchingItem(match);
     }
 
+    /**
+     * This method should be called by the UI when the user presses the up or down arrow
+     * @param isDown
+     */
     public void moveHighlightOnLabel(boolean isDown) {
         if (hasHighlightedLabel()) {
             // used to move the highlight on the bottom labels
