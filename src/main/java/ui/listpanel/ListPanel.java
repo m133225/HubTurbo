@@ -32,6 +32,7 @@ import util.KeyPress;
 import util.events.*;
 import backend.resource.TurboIssue;
 import filter.expression.Qualifier;
+import util.events.ShowMilestonePickerEvent;
 
 public class ListPanel extends FilterPanel {
 
@@ -58,6 +59,9 @@ public class ListPanel extends FilterPanel {
     private static final Boolean READ = true;
     private static final MenuItem changeLabelsMenuItem = new MenuItem();
     private static final String CHANGE_LABELS_MENU_ITEM_TEXT = "Change labels (L)";
+
+    private static final MenuItem changeMilestoneMenuItem = new MenuItem();
+    private static final String changeMilestoneMenuItemText = "Change milestone";
 
     public ListPanel(UI ui, GUIController guiController, PanelControl parentPanelControl, int panelIndex) {
         super(ui, guiController, parentPanelControl, panelIndex);
@@ -300,6 +304,11 @@ public class ListPanel extends FilterPanel {
             changeLabels();
         });
 
+        changeMilestoneMenuItem.setText(changeMilestoneMenuItemText);
+        changeMilestoneMenuItem.setOnAction(e -> {
+            changeMilestone();
+        });
+
         markAllBelowAsReadMenuItem.setText(MARK_ALL_AS_READ_MENU_ITEM_TEXT);
         markAllBelowAsReadMenuItem.setOnAction(e -> {
             markAllItemsBelow(READ);
@@ -309,9 +318,9 @@ public class ListPanel extends FilterPanel {
         markAllBelowAsUnreadMenuItem.setOnAction(e -> {
             markAllItemsBelow(!READ);
         });
-
+        
         contextMenu.getItems().addAll(markAsReadUnreadMenuItem, markAllBelowAsReadMenuItem,
-                                      markAllBelowAsUnreadMenuItem, changeLabelsMenuItem);
+                markAllBelowAsUnreadMenuItem, changeLabelsMenuItem, changeMilestoneMenuItem);
         contextMenu.setOnShowing(e -> updateContextMenu(contextMenu));
         listView.setContextMenu(contextMenu);
 
@@ -449,6 +458,12 @@ public class ListPanel extends FilterPanel {
 
     private void stopLoadingAnimation() {
         hideLoadingIndicator();
+    }
+
+    private void changeMilestone() {
+        if (getSelectedElement().isPresent()) {
+            ui.triggerEvent(new ShowMilestonePickerEvent(getSelectedElement().get().getIssue()));
+        }
     }
 
     /**
