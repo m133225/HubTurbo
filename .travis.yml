@@ -7,15 +7,14 @@ env:
     - TERM=dumb
 
 script:
-    - "./gradlew clean check -i"
+    - "./gradlew clean unstableTests -i"
 
 after_success:
     - "./gradlew jacocoRootReport coveralls"
 
 branches:
   only:
-    - master
-    - release
+    - 1268-reliable-board-tests
 
 before_install:
     - "export DISPLAY=:99.0"
