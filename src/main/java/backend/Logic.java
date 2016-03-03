@@ -275,7 +275,7 @@ public class Logic {
         Optional<Integer> originalMilestone = issue.getMilestone();
         logger.info("Changing milestone for " + issue + " on GitHub");
 
-        /* Calls models to replace the issue's labels locally since the the reference to the issue here
+        /* Calls models to replace the issue's milestone locally since the the reference to the issue here
            could be invalidated by changes to the models elsewhere */
         Optional<TurboIssue> localReplaceResult =
                 models.replaceIssueMilestone(issue.getRepoId(), issue.getId(), milestone);
@@ -287,20 +287,6 @@ public class Logic {
         return updateIssueMilestonesOnServer(issue, milestone)
                 .thenApply((isUpdateSuccessful) -> handleIssueMilestoneUpdateOnServerResult(
                         isUpdateSuccessful, localReplaceResult.get(), originalMilestone.orElseGet(() -> null)));
-        /*
-        return repoIO.replaceIssueMilestone(issue, milestone)
-                .thenApply(resultingIssue -> {
-                    logger.info("Changing milestone for " + issue + " on UI");
-                    if (resultingIssue.getMilestone() != null) {
-                        issue.setMilestoneById(resultingIssue.getMilestone().getNumber());
-                    } else {
-                        issue.setMilestoneById(null);
-                    }
-                    refreshUI();
-                    return true;
-                })
-                .exceptionally(Futures.withResult(false));
-                */
     }
 
     /**
@@ -388,7 +374,7 @@ public class Logic {
     }
 
     /**
-     * Replaces labels of the issue in the {@link Logic#models} corresponding to {@code modifiedIssue} with
+     * Replaces the milestone of the issue in the {@link Logic#models} corresponding to {@code modifiedIssue} with
      * {@code originalLabels} if the current labels on the issue is assigned at the same time as {@code modifiedIssue}
      * @param modifiedIssue
      * @param originalMilestone
@@ -397,10 +383,10 @@ public class Logic {
         TurboIssue currentIssue = getIssue(modifiedIssue.getRepoId(), modifiedIssue.getId()).orElse(modifiedIssue);
         LocalDateTime originalMilestoneModifiedAt = modifiedIssue.getMilestoneLastModifiedAt();
         LocalDateTime currentMilestoneAssignedAt = currentIssue.getMilestoneLastModifiedAt();
-        boolean isCurrentMilestoneModifiedFromOriginalLabels = originalMilestoneModifiedAt.isEqual(
+        boolean isCurrentMilestoneModifiedFromOriginalMilestone = originalMilestoneModifiedAt.isEqual(
                 currentMilestoneAssignedAt);
 
-        if (isCurrentMilestoneModifiedFromOriginalLabels) {
+        if (isCurrentMilestoneModifiedFromOriginalMilestone) {
             logger.info("Reverting milestone for issue " + currentIssue);
             models.replaceIssueMilestone(currentIssue.getRepoId(), currentIssue.getId(), originalMilestone);
             refreshUI();
