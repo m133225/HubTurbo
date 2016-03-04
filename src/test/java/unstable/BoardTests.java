@@ -287,6 +287,7 @@ public class BoardTests extends UITest {
         waitUntilNodeAppears(hasText("OK"));
         click("OK");
 
+        logger.info("Panel count is: " + panelControl.getPanelCount());
         waitAndAssertEquals(0, panelControl::getPanelCount);
         waitAndAssertEquals(ui.getTitle(), () -> getUiTitleWithOpenBoard("empty"));
     }
