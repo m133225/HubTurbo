@@ -58,6 +58,8 @@ public class BoardTests extends UITest {
         waitUntilNodeAppears("#boardnameinput");
         logger.info("Board name text field found.");
         logger.info("Board name text field is in focus: " + find("#boardnameinput").isFocused());
+        click("#boardnameinput");
+        logger.info("Board name text field is in focus: " + find("#boardnameinput").isFocused());
         ((TextField) find("#boardnameinput")).setText(name);
         click("OK");
     }
