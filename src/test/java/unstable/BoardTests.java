@@ -282,10 +282,7 @@ public class BoardTests extends UITest {
         waitUntilNodeAppears(hasText("OK"));
         click("OK");
 
-        waitUntilNodeAppears("#boardnameinput");
-        ((TextField) find("#boardnameinput")).setText("empty");
-        waitUntilNodeAppears(hasText("OK"));
-        click("OK");
+        saveBoardWithName("empty");
 
         logger.info("Panel count is: " + panelControl.getPanelCount());
         waitAndAssertEquals(0, panelControl::getPanelCount);
